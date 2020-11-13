@@ -1,5 +1,10 @@
 # Search + Dropdown = Wyszukiwarka stanów
 
+### Linki:
+- https://fusejs.io/
+- https://bulma.io/documentation/
+- https://github.com/CivilServiceUSA/us-states
+
 ## Opis projektu
 - wyszukiwarka stanów w USA
 - po wpisaniu frazy rozwija się dropdown z pasującymi wynikami
@@ -35,7 +40,7 @@ DO DZIEŁA!
 ## Tworzę dropdown z inputem
 
 - tworzę komponent `App.js` w katalogu `components`
-- w dokumentacji bulmy `Components/Dropdow`
+- w dokumentacji bulmy (link wyżej) `Components/Dropdow`
 - kopiuję kod, ale zamieniam button na input
 - input jest w sekcji `Form`
 - pamiętaj o zmianie `class` na `className`
@@ -47,7 +52,7 @@ DO DZIEŁA!
 
 ## Dane do przeszukiwania
 
-- link do repo z listą stanów coś na githubie (strona)
+- link do repo z listą stanów coś na githubie (link wyżej)
 - kopiuję danie z jsona do pliku `states.json`
 
 ## Instalacja Fuse.js
