@@ -1,8 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import '../node_modules/bulma/css/bulma.min.css';
+import App from './components/App';
+import './style.css';
 
 render(
-  <p>Hello World</p>,
+  <App />,
   document.getElementById('root'),
 );
