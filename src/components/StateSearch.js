@@ -1,8 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Fuse from 'fuse.js';
 import states from '../states.json';
 import classnames from 'classnames';
 import StatePage from './StatePage';
+
+function useOnClickOrFocusOutside(ref, handler) {
+  useEffect(
+    () => {
+      const listener = event => {
+        if (
+          ref.current 
+          && !ref.current.contains(event.target)
+        ) {
+          handler(event);
+        }
+      };
+
+      document.addEventListener('click', listener, true);
+      document.addEventListener('focus', listener, true);
+
+      return () => {
+        document.removeEventListener('click', listener, true);
+        document.removeEventListener('focus', listener, true);
+      };
+    },
+
+    [ref, handler]
+  );
+}
 
 const options = {
   keys: ['state', 'code'],
@@ -16,6 +41,7 @@ const StateSearch = () => {
   const [selected, setSelected] = useState(0);
   const [picked, setPicked] = useState(null);
   const [focused, setFocused] = useState(false);
+  const wrapperRef = useRef(null);
 
   const onKeyUp = (event) => {
     const { key } = event;
@@ -49,6 +75,11 @@ const StateSearch = () => {
     setResultsList(fuse.search(query).slice(0, 6));
   }, [query]);
 
+  useOnClickOrFocusOutside(
+    wrapperRef,
+    () => setFocused(false),
+  );
+
   if (picked !== null) {
     const currentState = resultsList[picked];
 
@@ -60,7 +91,7 @@ const StateSearch = () => {
   }
 
   return (
-    <div className="field">
+    <div className="field" ref={wrapperRef}>
       <div className="control">
         <div className="dropdown is-active">
           <div className="dropdown-trigger">
@@ -72,7 +103,6 @@ const StateSearch = () => {
               placeholder="wyszukaj..."
               onKeyUp={onKeyUp}
               onFocus={() => setFocused(true)}
-              onBlur={() => setFocused(false)}
             />
           </div>
           {focused && resultsList.length > 0 && (
