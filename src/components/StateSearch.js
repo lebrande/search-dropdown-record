@@ -67,7 +67,9 @@ const StateSearch = () => {
     }
 
     if (key === 'Enter') {
-      setPicked(selected);
+      if (resultsList[selected]) {
+        setPicked(selected);
+      }
     }
   };
 
