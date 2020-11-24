@@ -36,8 +36,9 @@ const StateSearch = ({
     }
 
     if (key === 'Enter') {
-      if (list[selected]) {
-        onPick(list[selected]);
+      const selectedItem = list[selected];
+      if (selectedItem) {
+        onPick(selectedItem);
       }
     }
   };
