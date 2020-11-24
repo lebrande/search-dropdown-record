@@ -1,6 +1,10 @@
 import states from './states.json';
 
 export const searchStates = (query, searchKey) => {
+  if (!query) {
+    return [];
+  }
+
   const lowerCaseQuery = query.toLowerCase()
 
   return states
