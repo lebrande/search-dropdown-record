@@ -1,14 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Fuse from 'fuse.js';
+import states from '../states.json';
 import classnames from 'classnames';
-import { useOnClickOrFocusOutside } from '../useOnClickOrFocusOutside';
+import StatePage from './StatePage';
 
-const StateSearch = ({
-  query,
-  onSetQuery,
-  list,
-  onPick,
-}) => {
+function useOnClickOrFocusOutside(ref, handler) {
+  useEffect(
+    () => {
+      const listener = event => {
+        if (
+          ref.current 
+          && !ref.current.contains(event.target)
+        ) {
+          handler(event);
+        }
+      };
+
+      document.addEventListener('click', listener, true);
+      document.addEventListener('focus', listener, true);
+
+      return () => {
+        document.removeEventListener('click', listener, true);
+        document.removeEventListener('focus', listener, true);
+      };
+    },
+
+    [ref, handler]
+  );
+}
+
+const options = {
+  keys: ['state', 'code'],
+};
+
+const fuse = new Fuse(states, options);
+
+const StateSearch = () => {
+  const [query, setQuery] = useState('');
+  const [resultsList, setResultsList] = useState([]);
   const [selected, setSelected] = useState(0);
+  const [picked, setPicked] = useState(null);
   const [focused, setFocused] = useState(false);
   const wrapperRef = useRef(null);
 
@@ -28,7 +59,7 @@ const StateSearch = ({
     if (key === 'ArrowDown') {
       const newSelected = selected + 1;
 
-      if (newSelected > list.length - 1) {
+      if (newSelected > resultsList.length - 1) {
         return;
       }
 
@@ -36,20 +67,30 @@ const StateSearch = ({
     }
 
     if (key === 'Enter') {
-      if (list[selected]) {
-        onPick(list[selected]);
+      if (resultsList[selected]) {
+        setPicked(selected);
       }
     }
   };
+
+  useEffect(() => {
+    setResultsList(fuse.search(query).slice(0, 6));
+  }, [query]);
 
   useOnClickOrFocusOutside(
     wrapperRef,
     () => setFocused(false),
   );
 
-  useEffect(() => {
-    setSelected(0);
-  }, [query]);
+  if (picked !== null) {
+    const currentState = resultsList[picked];
+
+    return (
+      <div className="App">
+        <StatePage state={currentState.item} onBack={() => setPicked(null)} />
+      </div>
+    );
+  }
 
   return (
     <div className="field" ref={wrapperRef}>
@@ -58,7 +99,7 @@ const StateSearch = ({
           <div className="dropdown-trigger">
             <input
               value={query}
-              onChange={({ target }) => onSetQuery(target.value)}
+              onChange={({ target }) => setQuery(target.value)}
               className="input"
               type="text"
               placeholder="wyszukaj..."
@@ -66,20 +107,18 @@ const StateSearch = ({
               onFocus={() => setFocused(true)}
             />
           </div>
-          {focused && list.length > 0 && (
+          {focused && resultsList.length > 0 && (
             <div className="dropdown-menu">
               <div className="dropdown-content">
-                {list.map((item, index) => {
-                  const { state } = item;
-
+                {resultsList.map(({ item: { state, code } }, index) => {
                   return (
                     <a
-                      key={state}
+                      key={code}
                       className={classnames('dropdown-item', {
                         'is-active': selected === index,
                       })}
                       onMouseEnter={() => setSelected(index)}
-                      onClick={() => onPick(item)}
+                      onClick={() => setPicked(selected)}
                     >
                       {state}
                     </a>
