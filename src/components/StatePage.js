@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { SearchStateContext } from '../hooks/useSearchState';
 
-const StatePage = ({
-  state: {
-    state,
-    admission_date,
-    capital_city,
-    code,
-    population,
-    population_rank,
-    map_image_url,
-    state_flag_url,
-    state_seal_url,
-  },
-  dataType,
-}) => {
+const StatePage = () => {
+  const {
+    currentState: {
+      state,
+      admission_date,
+      capital_city,
+      code,
+      population,
+      population_rank,
+      map_image_url,
+      state_flag_url,
+      state_seal_url,
+    },
+    dataType,
+  } = useContext(SearchStateContext);
+
   return (
     <div className="StatePage content">
       <h1 className="title is-1">{state}</h1>

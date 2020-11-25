@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import classnames from 'classnames';
 import { useOnClickOrFocusOutside } from '../useOnClickOrFocusOutside';
+import { SearchStateContext } from '../hooks/useSearchState';
 
-const StateSearch = ({
-  query,
-  onSetQuery,
-  list,
-  onPick,
-}) => {
+const StateSearch = () => {
+  const {
+    query,
+    onSetQuery,
+    list,
+    onPick,
+  } = useContext(SearchStateContext);
   const [selected, setSelected] = useState(0);
   const [focused, setFocused] = useState(false);
   const wrapperRef = useRef(null);
