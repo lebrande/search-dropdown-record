@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import classnames from 'classnames';
-import { useOnClickOrFocusOutside } from '../useOnClickOrFocusOutside';
+import { useOnClickOrFocusOutside } from '../hooks/useOnClickOrFocusOutside';
 import { SearchStateContext } from '../hooks/useSearchState';
 
 const StateSearch = () => {
