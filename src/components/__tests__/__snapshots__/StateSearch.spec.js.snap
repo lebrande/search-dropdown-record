@@ -15,6 +15,7 @@ exports[`StateSearch default render matches snapshot 1`] = `
       >
         <input
           className="input"
+          data-testid="input"
           onChange={[Function]}
           onFocus={[Function]}
           onKeyUp={[Function]}

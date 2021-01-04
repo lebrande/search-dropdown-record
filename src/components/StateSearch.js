@@ -14,6 +14,11 @@ const StateSearch = () => {
   const [focused, setFocused] = useState(false);
   const wrapperRef = useRef(null);
 
+  const _onPick = (item) => {
+    onPick(item);
+    setFocused(false);
+  }
+
   const onKeyUp = (event) => {
     const { key } = event;
 
@@ -40,7 +45,7 @@ const StateSearch = () => {
     if (key === 'Enter') {
       const selectedItem = list[selected];
       if (selectedItem) {
-        onPick(selectedItem);
+        _onPick(selectedItem);
       }
     }
   };
@@ -60,6 +65,7 @@ const StateSearch = () => {
         <div className="dropdown is-active">
           <div className="dropdown-trigger">
             <input
+              data-testid="input"
               value={query}
               onChange={({ target }) => onSetQuery(target.value)}
               className="input"
@@ -70,7 +76,7 @@ const StateSearch = () => {
             />
           </div>
           {focused && list.length > 0 && (
-            <div className="dropdown-menu">
+            <div data-testid="dropdown-menu" className="dropdown-menu">
               <div className="dropdown-content">
                 {list.map((item, index) => {
                   const { state } = item;
@@ -78,11 +84,12 @@ const StateSearch = () => {
                   return (
                     <a
                       key={state}
+                      data-testid="dropdown-item"
                       className={classnames('dropdown-item', {
                         'is-active': selected === index,
                       })}
                       onMouseEnter={() => setSelected(index)}
-                      onClick={() => onPick(item)}
+                      onClick={() => _onPick(item)}
                     >
                       {state}
                     </a>
