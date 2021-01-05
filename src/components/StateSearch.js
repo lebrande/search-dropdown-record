@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import classnames from 'classnames';
 import { useOnClickOrFocusOutside } from '../hooks/useOnClickOrFocusOutside';
 import { SearchStateContext } from '../hooks/useSearchState';
+import { getSelectedItemOnKey } from '../utils/getSelectedItemOnKey';
 
 const StateSearch = () => {
   const {
@@ -19,29 +20,7 @@ const StateSearch = () => {
     setFocused(false);
   }
 
-  const onKeyUp = (event) => {
-    const { key } = event;
-
-    if (key === 'ArrowUp') {
-      const newSelected = selected - 1;
-
-      if (newSelected < 0) {
-        return;
-      }
-
-      setSelected(newSelected);
-    }
-
-    if (key === 'ArrowDown') {
-      const newSelected = selected + 1;
-
-      if (newSelected > list.length - 1) {
-        return;
-      }
-
-      setSelected(newSelected);
-    }
-
+  const pickOnKey = (key) => {
     if (key === 'Enter') {
       const selectedItem = list[selected];
       if (selectedItem) {
@@ -71,7 +50,10 @@ const StateSearch = () => {
               className="input"
               type="text"
               placeholder="wyszukaj..."
-              onKeyUp={onKeyUp}
+              onKeyUp={({ key }) => {
+                setSelected(getSelectedItemOnKey(key, selected, list.length));
+                pickOnKey(key);
+              }}
               onFocus={() => setFocused(true)}
             />
           </div>
