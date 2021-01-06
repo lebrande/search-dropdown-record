@@ -1,6 +1,4 @@
-import states from './states.json';
-
-export const searchStates = (query, searchKey) => {
+export const searchStates = (query, searchKey, states) => {
   if (!query) {
     return [];
   }

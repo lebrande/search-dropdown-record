@@ -13,7 +13,7 @@ export const useSearchState = () => {
   const currentState = getState(pickedStateCode, states);
 
   useEffect(() => {
-    setResultsList(searchStates(query, searchKey));
+    setResultsList(searchStates(query, searchKey, states));
 
     if (currentState && currentState.state !== query) {
       setPickedStateCode(null);
