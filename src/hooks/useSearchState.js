@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext } from 'react';
 import { searchStates, getState } from '../services/state';
+import states from '../services/states.json';
 
 export const SearchStateContext = createContext(null);
 
@@ -9,7 +10,7 @@ export const useSearchState = () => {
   const [pickedStateCode, setPickedStateCode] = useState(null);
   const [searchKey, setSearchKey] = useState('state');
   const [dataType, setDataType] = useState('table');
-  const currentState = getState(pickedStateCode);
+  const currentState = getState(pickedStateCode, states);
 
   useEffect(() => {
     setResultsList(searchStates(query, searchKey));

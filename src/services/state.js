@@ -16,6 +16,6 @@ export const searchStates = (query, searchKey) => {
     .slice(0, 6)
 };
 
-export const getState = (codeToFind) => {
+export const getState = (codeToFind, states) => {
   return states.find(({ code }) => code === codeToFind)
 }
