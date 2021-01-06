@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import classnames from 'classnames';
-import { useOnClickOrFocusOutside } from '../useOnClickOrFocusOutside';
+import { useOnClickOrFocusOutside } from '../hooks/useOnClickOrFocusOutside';
 import { SearchStateContext } from '../hooks/useSearchState';
+import { getSelectedItemOnKey } from '../utils/getSelectedItemOnKey';
 
 const StateSearch = () => {
   const {
@@ -14,33 +15,16 @@ const StateSearch = () => {
   const [focused, setFocused] = useState(false);
   const wrapperRef = useRef(null);
 
-  const onKeyUp = (event) => {
-    const { key } = event;
+  const _onPick = (item) => {
+    onPick(item);
+    setFocused(false);
+  }
 
-    if (key === 'ArrowUp') {
-      const newSelected = selected - 1;
-
-      if (newSelected < 0) {
-        return;
-      }
-
-      setSelected(newSelected);
-    }
-
-    if (key === 'ArrowDown') {
-      const newSelected = selected + 1;
-
-      if (newSelected > list.length - 1) {
-        return;
-      }
-
-      setSelected(newSelected);
-    }
-
+  const pickOnKey = (key) => {
     if (key === 'Enter') {
       const selectedItem = list[selected];
       if (selectedItem) {
-        onPick(selectedItem);
+        _onPick(selectedItem);
       }
     }
   };
@@ -60,17 +44,21 @@ const StateSearch = () => {
         <div className="dropdown is-active">
           <div className="dropdown-trigger">
             <input
+              data-testid="input"
               value={query}
               onChange={({ target }) => onSetQuery(target.value)}
               className="input"
               type="text"
               placeholder="wyszukaj..."
-              onKeyUp={onKeyUp}
+              onKeyUp={({ key }) => {
+                setSelected(getSelectedItemOnKey(key, selected, list.length));
+                pickOnKey(key);
+              }}
               onFocus={() => setFocused(true)}
             />
           </div>
           {focused && list.length > 0 && (
-            <div className="dropdown-menu">
+            <div data-testid="dropdown-menu" className="dropdown-menu">
               <div className="dropdown-content">
                 {list.map((item, index) => {
                   const { state } = item;
@@ -78,11 +66,12 @@ const StateSearch = () => {
                   return (
                     <a
                       key={state}
+                      data-testid="dropdown-item"
                       className={classnames('dropdown-item', {
                         'is-active': selected === index,
                       })}
                       onMouseEnter={() => setSelected(index)}
-                      onClick={() => onPick(item)}
+                      onClick={() => _onPick(item)}
                     >
                       {state}
                     </a>

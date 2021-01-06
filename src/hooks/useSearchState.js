@@ -1,18 +1,26 @@
 import { useState, useEffect, createContext } from 'react';
-import { searchStates, getState } from '../services/state';
+import { stateService } from '../services/state';
+import { searchStates, getState } from '../utils/state';
 
 export const SearchStateContext = createContext(null);
 
 export const useSearchState = () => {
+  const [states, setStates] = useState([]);
   const [query, setQuery] = useState('');
   const [resultsList, setResultsList] = useState([]);
   const [pickedStateCode, setPickedStateCode] = useState(null);
   const [searchKey, setSearchKey] = useState('state');
   const [dataType, setDataType] = useState('table');
-  const currentState = getState(pickedStateCode);
+  const currentState = getState(pickedStateCode, states);
 
   useEffect(() => {
-    setResultsList(searchStates(query, searchKey));
+    stateService.fetchAllStates().then(({ data }) => {
+      setStates(data);
+    })
+  }, []);
+
+  useEffect(() => {
+    setResultsList(searchStates(query, searchKey, states));
 
     if (currentState && currentState.state !== query) {
       setPickedStateCode(null);
