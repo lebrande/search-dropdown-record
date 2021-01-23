@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import classnames from 'classnames';
 import { useOnClickOrFocusOutside } from '../useOnClickOrFocusOutside';
 import { SearchStateContext } from '../hooks/useSearchState';
+import { getSelectedItemOnKey } from '../utils/getSelectedItemOnKey';
 
 const StateSearch = () => {
   const {
@@ -14,33 +15,24 @@ const StateSearch = () => {
   const [focused, setFocused] = useState(false);
   const wrapperRef = useRef(null);
 
+  const _onPick = (item) => {
+    onPick(item);
+    setFocused(false);
+  }
+
   const onKeyUp = (event) => {
     const { key } = event;
+    setFocused(true);
 
-    if (key === 'ArrowUp') {
-      const newSelected = selected - 1;
-
-      if (newSelected < 0) {
-        return;
-      }
-
-      setSelected(newSelected);
-    }
-
-    if (key === 'ArrowDown') {
-      const newSelected = selected + 1;
-
-      if (newSelected > list.length - 1) {
-        return;
-      }
-
+    const newSelected = getSelectedItemOnKey(key, selected, list.length);
+    if (newSelected !== selected) {
       setSelected(newSelected);
     }
 
     if (key === 'Enter') {
       const selectedItem = list[selected];
       if (selectedItem) {
-        onPick(selectedItem);
+        _onPick(selectedItem);
       }
     }
   };
@@ -82,7 +74,7 @@ const StateSearch = () => {
                         'is-active': selected === index,
                       })}
                       onMouseEnter={() => setSelected(index)}
-                      onClick={() => onPick(item)}
+                      onClick={() => _onPick(item)}
                     >
                       {state}
                     </a>
