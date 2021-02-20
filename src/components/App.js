@@ -13,12 +13,12 @@ const App = () => {
   return (
     <div className="App">
       <SearchStateContext.Provider value={searchState}>
-        {/* <SearchKeySelect /> */}
+        <SearchKeySelect />
         <StateSearch />
-        {/* <DataTypeSelect />
+        <DataTypeSelect />
         {currentState && (
           <StatePage />
-        )} */}
+        )}
       </SearchStateContext.Provider>
     </div>
   );
