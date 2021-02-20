@@ -11,7 +11,7 @@ describe('StateSearch', () => {
         onSetQuery: jest.fn(),
         list: [],
         onPick: jest.fn(),
-      }}>
+      }}>u
         <StateSearch />
       </SearchStateContext.Provider>
     )).toJSON();
